@@ -1,0 +1,139 @@
+# USERS
+# Add users (create & add an email with verification token (plain text) to queue)
+
+POST http://hillel.api/api/users
+Accept: application/json
+Content-Type: application/json
+
+{
+    "name": "user7 users7",
+    "email": "user7@gmail.com",
+    "device_name": "Iphone_11",
+    "country_id": "1"
+}
+
+###
+
+# Verify user
+
+GET http://hillel.api/api/users/8/verify?token=2wQFXqiozZBjQE0vQlH8wol3e0Pyd4m1
+Accept: application/json
+
+###
+
+# List users (filter by name OR/AND email OR/AND verified OR/AND country)
+
+GET http://hillel.api/api/users?name=&email=&verified=&country=
+Accept: application/json
+
+###
+
+# Edit users
+
+PUT http://hillel.api/api/users/1
+Accept: application/json
+Content-Type: application/json
+
+{
+    "name": "user111",
+    "email": "user111@gmail.com",
+    "country_id": "1"
+}
+
+###
+
+# Delete users
+
+DELETE http://hillel.api/api/users/1
+Accept: application/json
+
+###
+###
+###
+
+# PROJECTS
+# Add projects
+
+POST http://hillel.api/api/projects
+Accept: application/json
+Content-Type: application/json
+
+{
+    "name": "project_6",
+    "author_id": "3"
+}
+
+###
+
+# Link projects to users
+
+POST http://hillel.api/api/projects/2
+Accept: application/json
+Content-Type: application/json
+
+[
+    3,
+    7,
+    6
+]
+
+###
+
+# List projects incl. labels (filter by user.email OR/AND user.continent OR/AND labels)
+#  filter[user_email]=&filter[user_continent]=&filter[labels]=
+GET http://hillel.api/api/projects?labels=test
+Accept: application/json
+
+###
+
+# Delete projects
+
+DELETE http://hillel.api/api/projects/3
+Accept: application/json
+
+
+###
+###
+###
+
+# LABELS
+# Add labels
+
+POST http://hillel.api/api/labels
+Accept: application/json
+Content-Type: application/json
+
+{
+    "name": "label2",
+    "author_id": "5"
+}
+
+###
+
+# Link labels to projects
+
+POST http://hillel.api/api/labels/3
+Accept: application/json
+Content-Type: application/json
+
+[
+    4,
+    5,
+    6
+]
+
+###
+
+# List labels (filter by user.email OR/AND projects)
+# filter[user_email]=&filter[projects]=
+GET http://hillel.api/api/labels?projects=4
+Accept: application/json
+
+###
+
+# Delete labels
+
+DELETE http://hillel.api/api/labels/2
+Accept: application/json
+
+###

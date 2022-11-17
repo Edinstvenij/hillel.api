@@ -3,30 +3,22 @@
 namespace App\Models;
 
 use App\Filters\QueryFilter;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Builder;
-use Laravel\Sanctum\HasApiTokens;
 
-class User extends Model
+class Project extends Model
 {
-    use HasFactory, HasApiTokens;
+    use HasFactory;
 
     protected $fillable = [
         'name',
-        'email',
-        'country_id',
-        'token'
+        'author_id'
     ];
 
-    public function countries()
+    public function author()
     {
-        return $this->hasMany(Country::class);
-    }
-
-    public function projects()
-    {
-        return $this->belongsToMany(Project::class);
+        return $this->hasMany(User::class);
     }
 
     public function labels()
@@ -34,9 +26,9 @@ class User extends Model
         return $this->belongsToMany(Label::class);
     }
 
-    public function authorProjects()
+    public function users()
     {
-        return $this->belongsToMany(Label::class);
+        return $this->belongsToMany(User::class);
     }
 
     public function scopeFilter(Builder $builder, QueryFilter $filters)
