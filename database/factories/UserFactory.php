@@ -18,11 +18,13 @@ class UserFactory extends Factory
     public function definition()
     {
         return [
-            'name' => fake()->name(),
-            'email' => fake()->unique()->safeEmail(),
-            'verified_at' => now(),
-            'token' => Str::random(10),
-            'country_id' => Str::random(10),
+            'name' => $this->faker->name(),
+            'email' => $this->faker->unique()->safeEmail(),
+            'verified_at' => $this->faker->optional()->date('Y-m-d H:i:s'),
+            'token' => Str::random(32),
+            'country_id' => 1,
+            'created_at' => $this->faker->date('Y-m-d H:i:s'),
+            'updated_at' => $this->faker->date('Y-m-d H:i:s')
         ];
     }
 }

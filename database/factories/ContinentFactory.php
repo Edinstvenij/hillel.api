@@ -5,22 +5,28 @@ namespace Database\Factories;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Http;
 
-/**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Continent>
- */
 class ContinentFactory extends Factory
 {
 
-    protected $continents;
+    protected $continents = [
+        'AF',
+        'AN',
+        'AS',
+        'EU',
+        'NA',
+        'OC',
+        'SA'
+    ];
 
     /**
      * Define the model's default state.
      *
-     * @return array<string, mixed>
+     * @return array
      */
-    public function definition()
+    public function definition(): array
     {
-        return ['code' => 'EU'];
-//        $this->continents = Http::get('http://country.io/continent.json')->json();
+        return [
+            'code' => 'EU'
+        ];
     }
 }
