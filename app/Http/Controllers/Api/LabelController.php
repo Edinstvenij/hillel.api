@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Http\Requests\Label\LabelRequest;
+use App\Http\Resources\LabelResource;
 use App\Models\Label;
 use App\Filters\LabelFilter;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Psy\Exception\ErrorException;
 
 class LabelController extends Controller
@@ -13,53 +16,48 @@ class LabelController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param LabelRequest $request
      */
-    public function store(Request $request): void
+    public function store(LabelRequest $request): void
     {
-        $request->validate([
-            'name' => ['required'],
-            'author_id' => ['required', 'integer']
-        ]);
-
         Label::create($request->post());
     }
 
     /**
      * Display the specified resource.
      *
-     * @return \Illuminate\Database\Eloquent\Collection
+     * @param LabelFilter $filters
+     * @return AnonymousResourceCollection
      */
-    public function show(LabelFilter $filters): \Illuminate\Database\Eloquent\Collection
+    public function show(LabelFilter $filters): AnonymousResourceCollection
     {
-        return Label::filter($filters)->get();
+        return LabelResource::collection(Label::filter($filters)->get());
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param \Illuminate\Http\Request $request
-     * @param int $id
+     * @param Request $request
+     * @param Label $label
      */
-    public function sync(Request $request, int $id): void
+    public function sync(Request $request, Label $label): void
     {
-        $label = Label::find($id);
-        if (!$label) {
-            throw new ErrorException('Label is NOT exits');
-        }
         $label->projects()->sync($request->post());
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param int $id
+     * @param Label $label
      */
-    public function destroy(int $id): void
+    public function destroy(Label $label): void
     {
-        $label = Label::find($id);
+        if ($label->author_id !== request()->user()->id) {
+            throw new ErrorException('You are not the author');
+        }
+
         $label->projects()->detach();
-        $label->destroy($id);
+        $label->delete();
     }
 }
 

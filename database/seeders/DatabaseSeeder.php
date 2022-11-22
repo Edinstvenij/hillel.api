@@ -50,18 +50,13 @@ class DatabaseSeeder extends Seeder
         $projects = Project::factory(100)->make()->each(function ($project) use ($users) {
             $project->author_id = rand(1, count($users));
             $project->save();
+            $project->users()->attach($users->random(rand(1, 4))->pluck('id'));
         });
 
-        $labels = Label::factory(200)->make()->each(function ($label) use ($users, $countries) {
+        Label::factory(200)->make()->each(function ($label) use ($users, $projects) {
             $label->author_id = rand(1, count($users));
             $label->save();
+            $label->projects()->attach($projects->random(rand(1, 3))->pluck('id'));
         });
-
-
-        // ...
-        // Many to many
-        // project_user, label_project
-        // ...
-
     }
 }

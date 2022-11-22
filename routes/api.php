@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\ProjectController;
 use App\Http\Controllers\Api\LabelController;
+use App\Http\Controllers\Api\AuthController;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,29 +17,38 @@ use App\Http\Controllers\Api\LabelController;
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
+Route::prefix('auth')->controller(AuthController::class)->group(function () {
+    Route::get('/{id}/verify', 'verify')->where(['id' => '[0-9]+'])->name('user.verified');
+    Route::post('/login', 'createToken');
+
+    Route::middleware('auth:sanctum')->post('/logout', 'logout'); // Я вычитал что для API не желательно делать logout, так ли это?
+});
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::prefix('users')->group(function () {
-    Route::post('/', [UserController::class, 'store']);
-    Route::get('/', [UserController::class, 'show']);
-    Route::get('/{id}/verify', [UserController::class, 'verify'])->name('user.verified');
-    Route::put('/{id}', [UserController::class, 'update']);
-    Route::delete('/{id}', [UserController::class, 'destroy']);
-});
 
-Route::prefix('projects')->group(function () {
-    Route::post('/', [ProjectController::class, 'store']);
-    Route::get('/', [ProjectController::class, 'show']);
-    Route::post('/{id}', [ProjectController::class, 'sync']);
-    Route::delete('/{id}', [ProjectController::class, 'destroy']);
-});
+Route::post('users/', [UserController::class, 'store']);
 
-Route::prefix('labels')->group(function () {
-    Route::post('/', [LabelController::class, 'store']);
-    Route::get('/', [LabelController::class, 'show']);
-    Route::post('/{id}', [LabelController::class, 'sync']);
-    Route::delete('/{id}', [LabelController::class, 'destroy']);
+Route::middleware('auth:sanctum')->group(function () {
+    Route::prefix('users')->controller(UserController::class)->group(function () {
+        Route::get('/', 'show');
+        Route::put('/{user}', 'update');
+        Route::delete('/{user}', 'destroy');
+    });
+
+    Route::prefix('projects')->controller(ProjectController::class)->group(function () {
+        Route::post('/', 'store');
+        Route::get('/', 'show');
+        Route::post('/{project}', 'sync');
+        Route::delete('/{project}', 'destroy');
+    });
+
+    Route::prefix('labels')->controller(LabelController::class)->group(function () {
+        Route::post('/', 'store');
+        Route::get('/', 'show');
+        Route::post('/{label}', 'sync');
+        Route::delete('/{label}', 'destroy');
+    });
 });

@@ -19,12 +19,12 @@ class Country extends Model
 
     public function continents()
     {
-        return $this->hasMany(Continent::class);
+        return $this->belongsTo(Continent::class);
     }
 
     public function users()
     {
-        return $this->belongsTo(User::class);
+        return $this->hasMany(User::class);
     }
 
 }

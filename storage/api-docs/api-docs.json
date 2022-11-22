@@ -1,0 +1,171 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "My super  ApplicationAPI",
+        "version": "1.0.0"
+    },
+    "paths": {
+        "/api/projects": {
+            "get": {
+                "tags": [
+                    "projects"
+                ],
+                "summary": "Get projects",
+                "description": "Get projects",
+                "operationId": "get_projects",
+                "responses": {
+                    "200": {
+                        "description": "Response JSON array",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "id": {
+                                            "type": "integer",
+                                            "example": "1"
+                                        },
+                                        "name": {
+                                            "type": "string",
+                                            "example": "Project_name"
+                                        },
+                                        "author": {
+                                            "type": "string",
+                                            "example": "Egor"
+                                        },
+                                        "labels": {
+                                            "type": "JSON",
+                                            "example": "['Label_name_1','Label_name_1']"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "projects"
+                ],
+                "summary": "Add projects",
+                "description": "Add project",
+                "operationId": "add_project",
+                "requestBody": {
+                    "description": "param project",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "Project_1"
+                                    },
+                                    "author_id": {
+                                        "type": "integer",
+                                        "example": "1"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Project created"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ]
+            }
+        },
+        "/api/projects/{projectId}": {
+            "post": {
+                "tags": [
+                    "projects"
+                ],
+                "summary": "Sync project to users",
+                "description": "Sync project to users",
+                "operationId": "sync_project",
+                "parameters": [
+                    {
+                        "name": "projectId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int"
+                        },
+                        "example": "1"
+                    }
+                ],
+                "requestBody": {
+                    "description": "Users id to this project",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "type": "int"
+                            },
+                            "example": [
+                                1,
+                                2,
+                                3
+                            ]
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successfully synced"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "projects"
+                ],
+                "summary": "Delete project to users",
+                "description": "Delete project to users",
+                "operationId": "delete_project",
+                "parameters": [
+                    {
+                        "name": "projectId",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int"
+                        },
+                        "example": "1"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successfully removed"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ]
+            }
+        }
+    }
+}

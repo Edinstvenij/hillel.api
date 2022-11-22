@@ -5,7 +5,7 @@ namespace App\Filters;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 
-abstract class QueryFilter
+abstract class QueryFilter implements BaseRequestFilterInterface
 {
     protected Request $request;
     protected Builder $builder;
@@ -35,9 +35,13 @@ abstract class QueryFilter
     {
         $this->builder = $builder;
 
-        foreach ($this->filters() as $name => $value) {
-            if (method_exists($this, $name)) {
-                call_user_func_array([$this, $name], array_filter([$value]));
+        if (!count($this->filters())) {
+            call_user_func_array([$this, 'baseRequest'], array_filter([]));
+        } else {
+            foreach ($this->filters() as $name => $value) {
+                if (method_exists($this, $name)) {
+                    call_user_func_array([$this, $name], array_filter([$value]));
+                }
             }
         }
 
@@ -51,5 +55,10 @@ abstract class QueryFilter
     protected function paramToArray($param): array
     {
         return explode($this->delimiter, $param);
+    }
+
+    public function baseRequest(): Builder
+    {
+        return $this->builder;
     }
 }

@@ -1,3 +1,31 @@
+#Auth user
+
+POST http://hillel.api/api/auth/login
+Accept: application/json
+Content-Type: application/json
+
+{
+    "email": "mable13@example.net",
+    "token": "RZy00SDdXJ1ItshVeJ3v2c0ccj94yKyd",
+    "device_name": "Samsung-FT1000"
+}
+
+###
+POST http://hillel.api/api/auth/logout
+Accept: application/json
+Content-Type: application/json
+Authorization: Bearer 5|drO0SnIqvQs9TXDSB2Dk08nSt5Dmn0GuBKUgN6rR
+
+###
+
+GET http://hillel.api/api/user
+Accept: application/json
+Authorization: Bearer 1|fhF50iOqyZzB3X66rXBL97BA0FhcHysIZ4k9mZDP
+
+###
+
+
+
 # USERS
 # Add users (create & add an email with verification token (plain text) to queue)
 
@@ -6,9 +34,8 @@ Accept: application/json
 Content-Type: application/json
 
 {
-    "name": "user7 users7",
-    "email": "user7@gmail.com",
-    "device_name": "Iphone_11",
+    "name": "user3 users1",
+    "email": "user4@gmail.com",
     "country_id": "1"
 }
 
@@ -16,23 +43,25 @@ Content-Type: application/json
 
 # Verify user
 
-GET http://hillel.api/api/users/8/verify?token=2wQFXqiozZBjQE0vQlH8wol3e0Pyd4m1
-Accept: application/json
+#GET http://hillel.api/api/users/8/verify?token=2wQFXqiozZBjQE0vQlH8wol3e0Pyd4m1
+#Accept: application/json
 
 ###
 
 # List users (filter by name OR/AND email OR/AND verified OR/AND country)
-
-GET http://hillel.api/api/users?name=&email=&verified=&country=
+#?name=&email=&verified=&country=
+GET http://hillel.api/api/users
 Accept: application/json
+Authorization: Bearer 1|fhF50iOqyZzB3X66rXBL97BA0FhcHysIZ4k9mZDP
 
 ###
 
 # Edit users
 
-PUT http://hillel.api/api/users/1
+PUT http://hillel.api/api/users/20
 Accept: application/json
 Content-Type: application/json
+Authorization: Bearer 1|fhF50iOqyZzB3X66rXBL97BA0FhcHysIZ4k9mZDP
 
 {
     "name": "user111",
@@ -44,8 +73,10 @@ Content-Type: application/json
 
 # Delete users
 
-DELETE http://hillel.api/api/users/1
+DELETE http://hillel.api/api/users/19
 Accept: application/json
+Content-Type: application/json
+Authorization: Bearer 1|fhF50iOqyZzB3X66rXBL97BA0FhcHysIZ4k9mZDP
 
 ###
 ###
@@ -57,6 +88,7 @@ Accept: application/json
 POST http://hillel.api/api/projects
 Accept: application/json
 Content-Type: application/json
+Authorization: Bearer 1|fhF50iOqyZzB3X66rXBL97BA0FhcHysIZ4k9mZDP
 
 {
     "name": "project_6",
@@ -67,9 +99,10 @@ Content-Type: application/json
 
 # Link projects to users
 
-POST http://hillel.api/api/projects/2
+POST http://hillel.api/api/projects/3
 Accept: application/json
 Content-Type: application/json
+Authorization: Bearer 1|fhF50iOqyZzB3X66rXBL97BA0FhcHysIZ4k9mZDP
 
 [
     3,
@@ -81,15 +114,17 @@ Content-Type: application/json
 
 # List projects incl. labels (filter by user.email OR/AND user.continent OR/AND labels)
 #  filter[user_email]=&filter[user_continent]=&filter[labels]=
-GET http://hillel.api/api/projects?labels=test
+GET http://hillel.api/api/projects?user_continent=AF
 Accept: application/json
+Authorization: Bearer 1|fhF50iOqyZzB3X66rXBL97BA0FhcHysIZ4k9mZDP
 
 ###
 
 # Delete projects
 
-DELETE http://hillel.api/api/projects/3
+DELETE http://hillel.api/api/projects/27
 Accept: application/json
+Authorization: Bearer 1|fhF50iOqyZzB3X66rXBL97BA0FhcHysIZ4k9mZDP
 
 
 ###
@@ -102,6 +137,7 @@ Accept: application/json
 POST http://hillel.api/api/labels
 Accept: application/json
 Content-Type: application/json
+Authorization: Bearer 1|fhF50iOqyZzB3X66rXBL97BA0FhcHysIZ4k9mZDP
 
 {
     "name": "label2",
@@ -115,25 +151,28 @@ Content-Type: application/json
 POST http://hillel.api/api/labels/3
 Accept: application/json
 Content-Type: application/json
+Authorization: Bearer 1|fhF50iOqyZzB3X66rXBL97BA0FhcHysIZ4k9mZDP
 
 [
-    4,
     5,
-    6
+    7,
+    8
 ]
 
 ###
 
 # List labels (filter by user.email OR/AND projects)
 # filter[user_email]=&filter[projects]=
-GET http://hillel.api/api/labels?projects=4
+GET http://hillel.api/api/labels?user_email=mable13@example.net
 Accept: application/json
+Authorization: Bearer 1|fhF50iOqyZzB3X66rXBL97BA0FhcHysIZ4k9mZDP
 
 ###
 
 # Delete labels
 
-DELETE http://hillel.api/api/labels/2
+DELETE http://hillel.api/api/labels/9
 Accept: application/json
+Authorization: Bearer 1|fhF50iOqyZzB3X66rXBL97BA0FhcHysIZ4k9mZDP
 
 ###

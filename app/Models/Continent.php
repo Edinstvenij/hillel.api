@@ -15,8 +15,8 @@ class Continent extends Model
         'code'
     ];
 
-    public function country()
+    public function countries()
     {
-        return $this->belongsTo(Country::class);
+        return $this->hasMany(Country::class);
     }
 }

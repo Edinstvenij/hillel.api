@@ -18,7 +18,7 @@ class Project extends Model
 
     public function author()
     {
-        return $this->hasMany(User::class);
+        return $this->belongsTo(User::class, 'author_id', 'id');
     }
 
     public function labels()

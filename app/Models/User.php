@@ -19,9 +19,9 @@ class User extends Model
         'token'
     ];
 
-    public function countries()
+    public function country()
     {
-        return $this->hasMany(Country::class);
+        return $this->belongsTo(Country::class)->first();
     }
 
     public function projects()
@@ -29,14 +29,14 @@ class User extends Model
         return $this->belongsToMany(Project::class);
     }
 
-    public function labels()
+    public function authorLabels()
     {
-        return $this->belongsToMany(Label::class);
+        return $this->hasMany(Label::class, 'author_id', 'id');
     }
 
     public function authorProjects()
     {
-        return $this->belongsToMany(Label::class);
+        return $this->hasMany(Project::class, 'author_id', 'id');
     }
 
     public function scopeFilter(Builder $builder, QueryFilter $filters)

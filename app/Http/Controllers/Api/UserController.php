@@ -4,92 +4,72 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Filters\UsersFilter;
+use App\Http\Requests\User\UserStoreRequest;
+use App\Http\Requests\User\UserUpdateRequest;
+use App\Http\Resources\UserResource;
 use App\Mail\VerifiedMail;
 use App\Models\User;
-use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Str;
 use Psy\Exception\ErrorException;
 
 class UserController extends Controller
 {
-    /**
-     * @throws ErrorException
-     */
-    public function verify(int $id)
-    {
-        $user = User::find($id);
-
-        if ($user->verified_at !== null) {
-            return throw new ErrorException('user is verify');
-        }
-
-        if ($user->token === request()->get('token')) {
-            $user->verified_at = now();
-            $user->save();
-        } else {
-            return throw new ErrorException('token is not find');
-        }
-    }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param \Illuminate\Http\Request $request
-     * @return \Illuminate\Http\Response
+     * @param UserStoreRequest $request
      */
-    public function store(Request $request): void
+    public function store(UserStoreRequest $request): void
     {
-        $request->validate([
-            'name' => ['required', 'max:155'],
-            'email' => ['required','email', 'max:255' ],
-            'device_name' => 'required',
-            'country_id' => ['required', 'integer']
-        ]);
+        $user = User::create($request->all());
 
-        $token = Str::random('32');
-
-        $param = [
-            'name' => $request->post('name'),
-            'email' => $request->post('email'),
-            'country_id' => $request->post('country_id'),
-            'token' => $token,
-        ];
-
-        $user = User::create($param);
-        $user->createToken($request->post('device_name'));
-
-        Mail::to($user->email)->queue(new VerifiedMail($user, $token));
+        Mail::to($user->email)->queue(new VerifiedMail($user, $request->tokenСlean));
     }
 
     /**
      * Display the specified resource.
      *
-     * @return \Illuminate\Database\Eloquent\Collection
+     * @param UsersFilter $filters
+     * @return AnonymousResourceCollection
      */
-    public function show(UsersFilter $filters): \Illuminate\Database\Eloquent\Collection
+    public function show(UsersFilter $filters): AnonymousResourceCollection
     {
-        return User::filter($filters)->get();
+        return UserResource::collection(User::filter($filters)->get());
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param \Illuminate\Http\Request $request
-     * @param int $id
+     * @param UserUpdateRequest $request
+     * @param User $user
      */
-    public function update(Request $request, int $id): void
+    public function update(UserUpdateRequest $request, User $user): void
     {
-        User::where('id', $id)->update($request->post());
+        $user->update($request->post());
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param int $id
+     * @param User $user
+     * @throws ErrorException
      */
-    public function destroy(int $id): void
+    public function destroy(User $user): void
     {
-        User::destroy($id);
+        $user->authorLabels()->each(function ($label) {
+            $label->projects()->detach();
+            $label->delete();
+        });
+
+        $user->authorProjects()->each(function ($project) {
+            $project->labels()->detach();
+            $project->users()->detach();
+            $project->delete();
+        });
+        $user->projects()->detach();
+
+        $user->delete();
     }
 }
