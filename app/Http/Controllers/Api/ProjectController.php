@@ -9,11 +9,15 @@ use App\Http\Resources\ProjectResource;
 use App\Models\Project;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
-use Psy\Exception\ErrorException;
 
 
 class ProjectController extends Controller
 {
+
+    public function __construct()
+    {
+        $this->authorizeResource(Project::class, 'project');
+    }
 
     /**
      * @OA\Post (
@@ -155,10 +159,6 @@ class ProjectController extends Controller
      */
     public function destroy(Project $project): void
     {
-        if ($project->author_id !== request()->user()->id) {
-            throw new ErrorException('You are not the author');
-        }
-
         $project->users()->detach();
         $project->labels()->detach();
         $project->delete();

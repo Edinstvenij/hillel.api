@@ -9,10 +9,15 @@ use App\Filters\LabelFilter;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
-use Psy\Exception\ErrorException;
 
 class LabelController extends Controller
 {
+
+    public function __construct()
+    {
+        $this->authorizeResource(Label::class, 'label');
+    }
+
     /**
      * Store a newly created resource in storage.
      *
@@ -52,10 +57,6 @@ class LabelController extends Controller
      */
     public function destroy(Label $label): void
     {
-        if ($label->author_id !== request()->user()->id) {
-            throw new ErrorException('You are not the author');
-        }
-
         $label->projects()->detach();
         $label->delete();
     }
