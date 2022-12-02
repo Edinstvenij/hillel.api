@@ -27,6 +27,7 @@ class ProjectController extends Controller
      * operationId="add_project",
      * tags={"projects"},
      * security={ {"bearer": {} }},
+     *
      * @OA\RequestBody(
      *    required=true,
      *    description="param project",
@@ -156,6 +157,7 @@ class ProjectController extends Controller
      * Remove the specified resource from storage.
      *
      * @param Project $project
+     * @throw AuthorizationException
      */
     public function destroy(Project $project): void
     {

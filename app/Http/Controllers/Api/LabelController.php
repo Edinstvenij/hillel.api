@@ -54,6 +54,8 @@ class LabelController extends Controller
      * Remove the specified resource from storage.
      *
      * @param Label $label
+     *
+     * @throw AuthorizationException
      */
     public function destroy(Label $label): void
     {
